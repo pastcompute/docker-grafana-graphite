@@ -10,10 +10,11 @@ RUN     add-apt-repository -y ppa:chris-lea/node.js
 RUN     apt-get -y update
 RUN     apt-get -y install python-django-tagging python-simplejson python-memcache python-ldap python-cairo python-pysqlite2 python-support \
                            python-pip gunicorn supervisor nginx-light nodejs git wget curl openjdk-7-jre build-essential python-dev
-
 RUN     pip install Twisted==11.1.0
 RUN     pip install Django==1.5
-
+RUN     apt-get -y update
+RUN     apt-get -y install vim less tcpdump
+RUN     apt-get -y install openntpd
 
 # Install Elasticsearch
 RUN     cd ~ && wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.3.2.deb
@@ -94,11 +95,17 @@ ADD     ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Grafana
 EXPOSE  80
 
+# Graphite
+EXPOSE  81
+
 # StatsD UDP port
 EXPOSE  8125/udp
 
 # StatsD Management port
 EXPOSE  8126
+
+# Carbon feed
+EXPOSE  2003/udp
 
 
 

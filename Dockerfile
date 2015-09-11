@@ -106,6 +106,7 @@ EXPOSE  8126
 
 # Carbon feed
 EXPOSE  2003/udp
+EXPOSE  2003/tcp
 
 
 

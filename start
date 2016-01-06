@@ -1,12 +1,46 @@
 #! /bin/bash
 
-CONTAINER_NAME=${CONTAINER_NAME:-sentrifarm-grafana-dashboard}
-if [ $(docker ps -a | grep $CONTAINER_NAME | awk '{print $NF}' | wc -l) -gt 0 ];then
-	docker kill $CONTAINER_NAME
-	docker rm $CONTAINER_NAME
-fi
+# We dont usually need to keep running this script, once the containers exist...
+
+IMAGE=pastcompute/grafana_graphite
+CONTAINER=${CONTAINER:-grafana}
+
+# If its already running, we want things to stop!
+
+#if [ $(docker ps -a | grep $CONTAINER | awk '{print $NF}' | wc -l) -gt 0 ];then
+#	docker kill $CONTAINER
+#	docker rm $CONTAINER
+#fi
 #if [ -d "./logs" ];then
 #	rm -fr ./logs/*
 #fi
 
-docker run -d -v $(pwd)/logs:/var/log/supervisor -p 9980:80 -p 9981:81 -p 8125:8125/udp -p 8126:8126 -p 2003:2003/udp -p 2003:2003 --name $CONTAINER_NAME pastcompute/grafana_graphite
+# Use data containers to persist the data!
+
+# This should barf if data container already exists, which is what we want (dont clobber!)
+docker create -v /opt/graphite/storage \
+              -v /opt/grafana/data \
+              -v /var/log/supervisor \
+              -v /var/log/nginx \
+    --name ${CONTAINER}-data $IMAGE /bin/echo "Data-only container for $CONTAINER"
+
+# Allow start on boot... (and whevener it dies...)
+docker run -d --name ${CONTAINER} --volumes-from ${CONTAINER}-data \
+    -p 9980:80 -p 9981:81 -p 8125:8125/udp -p 8126:8126 -p 2003:2003/udp -p 2003:2003 \
+    --restart unless-stopped \
+    --name $CONTAINER $IMAGE
+
+sleep 5
+
+# Add our data source automatically:
+# This will fail when it already exists, which is fine
+docker exec -it grafana curl 'http://admin:admin@127.0.0.1:3000/api/datasources' -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary '{"name":"GraphiteLocal","type":"graphite","url":"http://127.0.0.1:8000","access":"proxy","isDefault":true}'
+
+# Now we just need to import dashboard json: currently, done manually
+
+# Now we can just docker stop/start as needed
+
+# Export data:
+# docker run --volumes-from grafana-data ubuntu:14.04 tar -cO /opt/graphite/storage | gzip -c > volume.tgz
+# note that the files will be sparse at the beginning so du -s on the docker inspect volume is on 11MB
+# unless you use --apparent-size which is 300MB, which is what the tar is (and why this takes so damn long - even going to /ramdisk)

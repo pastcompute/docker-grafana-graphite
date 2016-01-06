@@ -86,6 +86,9 @@ ADD     ./nginx/nginx.conf /etc/nginx/nginx.conf
 ADD     ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 
+ADD	./test_data_script.sh /usr/local/bin/
+RUN     chmod 0755 /usr/local/bin/test_data_script.sh
+
 # ---------------- #
 #   Expose Ports   #
 # ---------------- #
@@ -111,4 +114,5 @@ EXPOSE 81
 #   Run!   #
 # -------- #
 
+CMD     ["/usr/local/bin/test_data_script.sh"]
 CMD     ["/usr/bin/supervisord"]

@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN     apt-get -y install software-properties-common
 RUN     apt-get -y update
 RUN     apt-get -y install python-django-tagging python-simplejson python-memcache python-ldap python-cairo python-pysqlite2 python-support \
-                           python-pip gunicorn supervisor nginx-light nodejs git wget curl openjdk-7-jre build-essential python-dev
+                           python-pip gunicorn supervisor nginx-light nodejs git wget curl openjdk-7-jre build-essential python-dev htop sqlite3 --no-install-recommends
 RUN     curl -sL https://deb.nodesource.com/setup_0.10 | sudo -E bash -
 RUN     apt-get -y update
 RUN     sudo apt-get install -y nodejs

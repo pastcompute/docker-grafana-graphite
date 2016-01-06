@@ -9,4 +9,4 @@ fi
 #	rm -fr ./logs/*
 #fi
 
-docker run -d -v $(pwd)/logs:/var/log/supervisor -p 9980:80 -p 9981:81 -p 8125:8125/udp -p 8126:8126 -p 2003:2003/udp --name $CONTAINER_NAME pastcompute/grafana_graphite
+docker run -d -v $(pwd)/logs:/var/log/supervisor -p 9980:80 -p 9981:81 -p 8125:8125/udp -p 8126:8126 -p 2003:2003/udp -p 2003:2003 --name $CONTAINER_NAME pastcompute/grafana_graphite

@@ -14,6 +14,7 @@ RUN     apt-get -y install python-django-tagging python-simplejson python-memcac
 RUN     curl -sL https://deb.nodesource.com/setup_0.10 | sudo -E bash -
 RUN     apt-get -y update
 RUN     sudo apt-get install -y nodejs
+RUN     sudo apt-get clean -y
 
 RUN     pip install Twisted==11.1.0
 RUN     pip install Django==1.5
@@ -85,8 +86,7 @@ ADD     ./grafana/dashboard-loader/dashboard-loader.js /src/dashboard-loader/
 ADD     ./nginx/nginx.conf /etc/nginx/nginx.conf
 ADD     ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-
-ADD	./test_data_script.sh /usr/local/bin/
+ADD     ./test_data_script.sh /usr/local/bin/
 RUN     chmod 0755 /usr/local/bin/test_data_script.sh
 
 # ---------------- #
@@ -114,5 +114,4 @@ EXPOSE 81
 #   Run!   #
 # -------- #
 
-CMD     ["/usr/local/bin/test_data_script.sh"]
 CMD     ["/usr/bin/supervisord"]

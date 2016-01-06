@@ -41,6 +41,7 @@ docker exec -it grafana curl 'http://admin:admin@127.0.0.1:3000/api/datasources'
 # Now we can just docker stop/start as needed
 
 # Export data:
-# docker run --volumes-from grafana-data ubuntu:14.04 tar -cO /opt/graphite/storage | gzip -c > volume.tgz
+# docker run --volumes-from grafana-data ubuntu:14.04 tar -cOS /opt/graphite/storage | gzip -c > volume.tgz
 # note that the files will be sparse at the beginning so du -s on the docker inspect volume is on 11MB
 # unless you use --apparent-size which is 300MB, which is what the tar is (and why this takes so damn long - even going to /ramdisk)
+# Using tar -S helps though

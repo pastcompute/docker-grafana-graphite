@@ -1,0 +1,7 @@
+#! /bin/bash
+
+echo Configuring data source
+# Add our data source automatically:
+# This will fail when it already exists, which is fine
+docker exec -it grafana curl 'http://admin:admin@127.0.0.1:3000/api/datasources' -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary '{"name":"GraphiteLocal","type":"graphite","url":"http://127.0.0.1:8000","access":"proxy","isDefault":true}'
+

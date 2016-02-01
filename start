@@ -38,6 +38,8 @@ echo "Waiting for init"
 sleep 5
 echo "Waiting for init"
 sleep 5
+echo "Waiting for init"
+sleep 5
 
 sh enroll
 

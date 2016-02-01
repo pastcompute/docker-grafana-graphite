@@ -2,7 +2,7 @@
 
 # We dont usually need to keep running this script, once the containers exist...
 
-IMAGE=pastcompute/grafana_graphite
+IMAGE=demo/grafana_graphite
 CONTAINER=${CONTAINER:-grafana}
 
 # If its already running, we want things to stop!

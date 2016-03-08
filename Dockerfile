@@ -51,6 +51,9 @@ RUN     mkdir /src/grafana                                                      
         tar -xzf /src/grafana.tar.gz -C /opt/grafana --strip-components=1                                     &&\
         rm /src/grafana.tar.gz
 
+# Install influxDB
+RUN     wget https://s3.amazonaws.com/influxdb/influxdb_0.10.2-1_amd64.deb && \
+        dpkg -i influxdb_0.10.2-1_amd64.deb && rm influxdb_0.10.2-1_amd64.deb
 
 # ----------------- #
 #   Configuration   #
@@ -71,6 +74,11 @@ RUN     chown -R www-data /opt/graphite/storage
 RUN     chmod 0775 /opt/graphite/storage /opt/graphite/storage/whisper
 RUN     chmod 0664 /opt/graphite/storage/graphite.db
 RUN     cd /opt/graphite/webapp/graphite && python manage.py syncdb --noinput
+
+# Configure InfluxDB
+ADD     ./influxdb/runonce_influxdb.sh /runonce_influxdb.sh
+RUN     sh /runonce_influxdb.sh
+RUN     update-rc.d influxdb defaults
 
 # Configure Grafana
 ADD     ./grafana/custom.ini /opt/grafana/conf/custom.ini

@@ -6,14 +6,13 @@ FROM     ubuntu:14.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# Install all prerequisites
-RUN     apt-get -y install software-properties-common
-RUN     apt-get -y update
-RUN     apt-get -y install python-django-tagging python-simplejson python-memcache python-ldap python-cairo python-pysqlite2 python-support \
-                           python-pip gunicorn supervisor nginx-light nodejs git wget curl openjdk-7-jre build-essential python-dev htop sqlite3 --no-install-recommends
+# Install all prerequisites. On vuktr VPS+ubuntu14, no-install-recommends is not needed
+RUN     apt-get -y install software-properties-common curl git wget
 RUN     curl -sL https://deb.nodesource.com/setup_0.10 | sudo -E bash -
-RUN     apt-get -y update
-RUN     sudo apt-get install -y nodejs
+RUN     apt-get install -y nodejs
+RUN     apt-get -y install python-django-tagging python-simplejson python-memcache python-ldap python-cairo python-pysqlite2 python-support \
+                           python-pip gunicorn supervisor nginx-light openjdk-7-jre build-essential python-dev
+RUN     apt-get -y install htop sqlite3
 RUN     sudo apt-get clean -y
 
 RUN     pip install Twisted==11.1.0

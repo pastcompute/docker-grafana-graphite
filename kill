@@ -1,0 +1,7 @@
+#! /bin/bash
+
+IMAGE=pastcompute/grafana_graphite
+CONTAINER=${CONTAINER:-grafana}
+
+docker stop $CONTAINER
+docker rm $CONTAINER
